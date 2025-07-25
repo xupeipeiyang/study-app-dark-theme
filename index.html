@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习应用 - 深色主题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, 
+                        #0a0f0c 0%, 
+                        #1a2e1f 50%, 
+                        #2d4a35 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, 
+                        rgba(136, 207, 167, 0.1) 0%, 
+                        transparent 50%),
+                        radial-gradient(circle at 70% 80%, 
+                        rgba(136, 207, 167, 0.08) 0%, 
+                        transparent 50%);
+            pointer-events: none;
+        }
+        
+        .iphone-container {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 
+                        0 10px 40px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                        #0f1611 0%, 
+                        #1a2e1f 50%, 
+                        #0a0f0c 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: rgba(136, 207, 167, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 0 20px 100px;
+            height: calc(100% - 44px);
+            overflow-y: auto;
+        }
+        
+        .time-display {
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.15) 0%, 
+                        rgba(136, 207, 167, 0.08) 50%, 
+                        rgba(136, 207, 167, 0.12) 100%);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: 0 20px 60px rgba(136, 207, 167, 0.1), 
+                        0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.25),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            border: 1.5px solid rgba(136, 207, 167, 0.2);
+            position: relative;
+        }
+        
+        .time-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.5) 50%, 
+                        transparent 100%);
+            border-radius: 28px 28px 0 0;
+        }
+        
+        .time {
+            font-size: 56px;
+            font-weight: 100;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 30%, 
+                        #88cfa7 60%, 
+                        #6ee7b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            text-shadow: 0 0 30px rgba(136, 207, 167, 0.3);
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .date {
+            font-size: 18px;
+            font-weight: 300;
+            color: rgba(136, 207, 167, 0.9);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(136, 207, 167, 0.2);
+        }
+        
+        .quote {
+            font-size: 15px;
+            color: rgba(136, 207, 167, 0.7);
+            font-style: italic;
+            font-weight: 300;
+            margin-top: 20px;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            text-shadow: 0 0 15px rgba(136, 207, 167, 0.15);
+            text-align: center;
+            padding: 0 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.2) 0%, 
+                        rgba(136, 207, 167, 0.1) 50%, 
+                        rgba(136, 207, 167, 0.15) 100%);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(136, 207, 167, 0.15), 
+                        0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.3),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            border: 1.5px solid rgba(136, 207, 167, 0.25);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.1) 50%, 
+                        transparent 100%);
+            transition: left 0.6s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(136, 207, 167, 0.25), 
+                        0 15px 45px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.4),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.25) 0%, 
+                        rgba(136, 207, 167, 0.15) 50%, 
+                        rgba(136, 207, 167, 0.2) 100%);
+            border-color: rgba(136, 207, 167, 0.35);
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 200;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 30%, 
+                        #88cfa7 70%, 
+                        #6ee7b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 25px rgba(136, 207, 167, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: rgba(136, 207, 167, 0.8);
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(136, 207, 167, 0.1);
+        }
+        
+        .tasks-section {
+            margin-bottom: 32px;
+        }
+        
+        .tasks-section h3 {
+            font-size: 22px;
+            font-weight: 300;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 50%, 
+                        #6ee7b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 20px rgba(136, 207, 167, 0.2);
+        }
+        
+        .task-card {
+            background: linear-gradient(135deg, 
+                        rgba(15, 22, 17, 0.8) 0%, 
+                        rgba(26, 46, 31, 0.7) 50%, 
+                        rgba(10, 15, 12, 0.8) 100%);
+            backdrop-filter: blur(30px) saturate(120%);
+            -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
+                        0 6px 20px rgba(136, 207, 167, 0.1),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(136, 207, 167, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.4) 50%, 
+                        transparent 100%);
+        }
+        
+        .task-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 
+                        0 10px 30px rgba(136, 207, 167, 0.15),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.3),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, 
+                        rgba(15, 22, 17, 0.9) 0%, 
+                        rgba(26, 46, 31, 0.8) 50%, 
+                        rgba(10, 15, 12, 0.9) 100%);
+            border-color: rgba(136, 207, 167, 0.25);
+        }
+        
+        .task-card.completed {
+            background: linear-gradient(135deg, 
+                        rgba(10, 15, 12, 0.6) 0%, 
+                        rgba(15, 22, 17, 0.5) 50%, 
+                        rgba(8, 12, 10, 0.6) 100%);
+            border: 1px solid rgba(136, 207, 167, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 
+                        0 4px 15px rgba(136, 207, 167, 0.05),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.1),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            opacity: 0.6;
+        }
+        
+        .task-card.completed .task-title {
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.5) 0%, 
+                        rgba(167, 230, 193, 0.4) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .task-card.completed .task-time {
+            color: rgba(136, 207, 167, 0.4);
+        }
+        
+        .task-title {
+            font-size: 17px;
+            font-weight: 400;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+            text-shadow: 0 0 15px rgba(136, 207, 167, 0.2);
+        }
+        
+        .task-time {
+            font-size: 13px;
+            color: rgba(136, 207, 167, 0.7);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 10px rgba(136, 207, 167, 0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(135deg, 
+                        rgba(0, 0, 0, 0.4) 0%, 
+                        rgba(15, 22, 17, 0.6) 50%, 
+                        rgba(0, 0, 0, 0.4) 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 16px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3),
+                        inset 0 -1px 0 rgba(136, 207, 167, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.2) 50%, 
+                        transparent 100%);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 30%, 
+                        #88cfa7 70%, 
+                        #6ee7b7 100%);
+            border-radius: 8px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(136, 207, 167, 0.4),
+                        0 0 30px rgba(136, 207, 167, 0.2);
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                        rgba(255, 255, 255, 0.2) 0%, 
+                        transparent 50%, 
+                        rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 8px;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 85px;
+            background: linear-gradient(135deg, 
+                        rgba(15, 22, 17, 0.9) 0%, 
+                        rgba(26, 46, 31, 0.8) 50%, 
+                        rgba(10, 15, 12, 0.9) 100%);
+            backdrop-filter: blur(30px) saturate(120%);
+            -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border-top: 1px solid rgba(136, 207, 167, 0.2);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0 16px;
+            box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.4),
+                        0 -5px 20px rgba(136, 207, 167, 0.1),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.15);
+        }
+        
+        @media (max-width: 375px) {
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, 
+                            rgba(15, 22, 17, 0.9) 0%, 
+                            rgba(26, 46, 31, 0.8) 50%, 
+                            rgba(10, 15, 12, 0.9) 100%);
+                backdrop-filter: blur(30px) saturate(120%);
+                -webkit-backdrop-filter: blur(30px) saturate(120%);
+                border-top: 1px solid rgba(136, 207, 167, 0.2);
+                padding: 12px 0 16px;
+                box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.4),
+                            0 -5px 20px rgba(136, 207, 167, 0.1),
+                            inset 0 1px 0 rgba(136, 207, 167, 0.15);
+                z-index: 1000;
+            }
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: rgba(136, 207, 167, 0.7);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 10px 14px;
+            border-radius: 16px;
+            min-width: 60px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            color: rgba(136, 207, 167, 1);
+            background: rgba(136, 207, 167, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(136, 207, 167, 0.2);
+        }
+        
+        .nav-item.active {
+            color: #88cfa7;
+            background: rgba(136, 207, 167, 0.2);
+            box-shadow: 0 0 20px rgba(136, 207, 167, 0.3),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.3);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .study-section {
+            text-align: center;
+            margin: 32px 0;
+        }
+        
+        .study-button {
+            width: 100%;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.3) 0%, 
+                        rgba(136, 207, 167, 0.2) 50%, 
+                        rgba(136, 207, 167, 0.25) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            color: rgba(136, 207, 167, 1);
+            border: 2px solid rgba(136, 207, 167, 0.4);
+            border-radius: 32px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 45px rgba(136, 207, 167, 0.2), 
+                        0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.4),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            margin: 24px 0;
+            letter-spacing: 0.03em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .study-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.2) 50%, 
+                        transparent 100%);
+            transition: left 0.6s ease;
+        }
+        
+        .study-button:hover::before {
+            left: 100%;
+        }
+        
+        .study-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(136, 207, 167, 0.3), 
+                        0 12px 40px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.5),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border-color: rgba(136, 207, 167, 0.6);
+        }
+        
+        .timer-display {
+            font-size: 64px;
+            font-weight: 100;
+            text-align: center;
+            margin: 40px 0;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 30%, 
+                        #88cfa7 60%, 
+                        #6ee7b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 40px rgba(136, 207, 167, 0.4);
+            position: relative;
+            padding: 32px;
+            background-color: rgba(136, 207, 167, 0.08);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border-radius: 28px;
+            border: 1.5px solid rgba(136, 207, 167, 0.2);
+            box-shadow: 0 20px 60px rgba(136, 207, 167, 0.15), 
+                        0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.3),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        
+        .timer-button {
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            min-width: 90px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.03em;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timer-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(255, 255, 255, 0.15) 50%, 
+                        transparent 100%);
+            transition: left 0.6s ease;
+        }
+        
+        .timer-button:hover::before {
+            left: 100%;
+        }
+        
+        .timer-button.start {
+            background: linear-gradient(135deg, 
+                        rgba(136, 207, 167, 0.9) 0%, 
+                        rgba(167, 230, 193, 0.8) 50%, 
+                        rgba(110, 231, 183, 0.9) 100%);
+            color: rgba(15, 22, 17, 0.9);
+            box-shadow: 0 12px 35px rgba(136, 207, 167, 0.3),
+                        0 6px 20px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .timer-button.stop {
+            background: linear-gradient(135deg, 
+                        rgba(239, 68, 68, 0.9) 0%, 
+                        rgba(248, 113, 113, 0.8) 50%, 
+                        rgba(220, 38, 38, 0.9) 100%);
+            color: white;
+            box-shadow: 0 12px 35px rgba(239, 68, 68, 0.3),
+                        0 6px 20px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .timer-button.reset {
+            background: linear-gradient(135deg, 
+                        rgba(156, 163, 175, 0.9) 0%, 
+                        rgba(209, 213, 219, 0.8) 50%, 
+                        rgba(107, 114, 128, 0.9) 100%);
+            color: rgba(15, 22, 17, 0.9);
+            box-shadow: 0 12px 35px rgba(156, 163, 175, 0.3),
+                        0 6px 20px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .timer-button:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+        
+        .timer-button.start:hover {
+            box-shadow: 0 18px 45px rgba(136, 207, 167, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        .timer-button.stop:hover {
+            box-shadow: 0 18px 45px rgba(239, 68, 68, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        .timer-button.reset:hover {
+            box-shadow: 0 18px 45px rgba(156, 163, 175, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        .forum-topic {
+            background: linear-gradient(135deg, 
+                        rgba(15, 22, 17, 0.8) 0%, 
+                        rgba(26, 46, 31, 0.7) 50%, 
+                        rgba(10, 15, 12, 0.8) 100%);
+            backdrop-filter: blur(30px) saturate(120%);
+            -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 
+                        0 6px 20px rgba(136, 207, 167, 0.1),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(136, 207, 167, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .forum-topic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(136, 207, 167, 0.4) 50%, 
+                        transparent 100%);
+        }
+        
+        .forum-topic:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 
+                        0 10px 30px rgba(136, 207, 167, 0.15),
+                        inset 0 1px 0 rgba(136, 207, 167, 0.3),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, 
+                        rgba(15, 22, 17, 0.9) 0%, 
+                        rgba(26, 46, 31, 0.8) 50%, 
+                        rgba(10, 15, 12, 0.9) 100%);
+            border-color: rgba(136, 207, 167, 0.25);
+        }
+        
+        .forum-topic h3 {
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            font-size: 17px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            text-shadow: 0 0 15px rgba(136, 207, 167, 0.2);
+        }
+        
+        .forum-topic p {
+            color: rgba(136, 207, 167, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            font-weight: 300;
+            text-shadow: 0 0 10px rgba(136, 207, 167, 0.1);
+        }
+        
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, 
+                        #88cfa7 0%, 
+                        #a7e6c1 30%, 
+                        #88cfa7 70%, 
+                        #6ee7b7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: rgba(15, 22, 17, 0.9);
+            margin: 0 auto 24px;
+            box-shadow: 0 15px 45px rgba(136, 207, 167, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.2),
+                        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+            font-weight: 300;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                        transparent 30%, 
+                        rgba(255, 255, 255, 0.1) 50%, 
+                        transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(0%) translateY(0%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="content">
+                <div class="time-display">
+                    <div class="time">14:30</div>
+                    <div class="date">2024年1月15日 星期一</div>
+                    <div class="quote">"学而时习之，不亦说乎"</div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">今日学习</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">总时长</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">连续天数</div>
+                    </div>
+                </div>
+                
+                <div class="tasks-section">
+                    <h3>今日任务</h3>
+                    <div class="task-card">
+                        <div class="task-title">数学复习</div>
+                        <div class="task-time">09:00 - 10:30</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="task-card completed">
+                        <div class="task-title">英语阅读</div>
+                        <div class="task-time">14:00 - 15:00</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-title">物理实验</div>
+                        <div class="task-time">16:00 - 17:30</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="study-section">
+                    <button class="study-button">开始学习</button>
+                    
+                    <div class="timer-display">25:00</div>
+                    
+                    <div class="timer-controls">
+                        <button class="timer-button start">开始</button>
+                        <button class="timer-button stop">暂停</button>
+                        <button class="timer-button reset">重置</button>
+                    </div>
+                </div>
+                
+                <div class="forum-topic">
+                    <h3>学习交流</h3>
+                    <p>分享你的学习心得，与同学们一起进步</p>
+                </div>
+                
+                <div class="profile-avatar">A</div>
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">🏠</div>
+                    <span>首页</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">📚</div>
+                    <span>学习</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⏰</div>
+                    <span>计时</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">💬</div>
+                    <span>论坛</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">👤</div>
+                    <span>我的</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
